@@ -1,4 +1,4 @@
-import { NextFunction, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import httpStatus from 'http-status';
 import { Secret } from 'jsonwebtoken';
 import config from '../../config';
@@ -7,11 +7,12 @@ import { jwtHelpers } from '../../helpers/jwtHelpers';
 
 const auth =
   (...requiredRoles: string[]) =>
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async (req: any, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response, next: NextFunction) => {
     try {
       //get authorization token
-      const token = req.headers.authorization;
+      const token = Array.isArray(req.headers.Authorization)
+        ? req.headers.Authorization[0] // take the first element if it's an array
+        : req.headers.Authorization;
       if (!token) {
         throw new ApiError(httpStatus.UNAUTHORIZED, 'You are not authorized');
       }

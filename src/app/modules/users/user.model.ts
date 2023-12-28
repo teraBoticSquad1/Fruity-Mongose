@@ -1,23 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-this-alias */
+import bcrypt from 'bcrypt';
+import { NextFunction } from 'express';
 import { Schema, model } from 'mongoose';
+import config from '../../../config';
 import { IUser, UserModel } from './user.interface';
 
-/* 
-
-export type IUser = {
-  role: string;
-  email: string;
-  password: string;
-  firstName: string;
-  lastName: string;
-  userName: string;
-  address: string;
-  orders: Types.ObjectId[] | IOrder[];
-  myReviews: Types.ObjectId[] | IReview[];
-};
-
-
-*/
-const userSchema = new Schema<IUser>(
+export const userSchema = new Schema<IUser, UserModel>(
   {
     role: {
       type: String,
@@ -68,8 +57,21 @@ const userSchema = new Schema<IUser>(
     timestamps: true,
     toJSON: {
       virtuals: true,
+      transform: function (doc, ret) {
+        delete ret.password; // Exclude password field from the response
+      },
     },
   }
 );
 
+userSchema.pre('save', async function (next: NextFunction) {
+  // hashing password
+  const user = this as any;
+  user.password = await bcrypt.hash(
+    user.password,
+    Number(config.bcrypt_salt_rounds)
+  );
+
+  next();
+});
 export const User = model<IUser, UserModel>('User', userSchema);

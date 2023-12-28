@@ -1,11 +1,15 @@
-// import express from 'express';
+import express from 'express';
+import { UserRoutes } from '../modules/users/user.route';
 
-// const router = express.Router();
+const router = express.Router();
 
-// const modulesRoute = [
+const modulesRoute = [
+  {
+    path: '/user',
+    route: UserRoutes,
+  },
+];
 
-// ];
+modulesRoute.map(route => router.use(route.path, route.route));
 
-// // modulesRoute.map(route => router.use(route.path, route.route));
-
-// export default router;
+export default router;

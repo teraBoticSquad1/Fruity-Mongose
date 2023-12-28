@@ -39,7 +39,7 @@ const userSchema = new Schema<IUser>(
     },
     lastName: {
       type: String,
-      required: true,
+      required: false,
     },
     userName: {
       type: String,

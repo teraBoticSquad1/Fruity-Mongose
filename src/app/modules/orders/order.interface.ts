@@ -1,4 +1,4 @@
-import { Types } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { IProduct } from '../products/product.inteface';
 import { IUser } from '../users/user.interface';
 
@@ -15,3 +15,5 @@ export type IOrder = {
     | 'Cancelled'
     | 'Delivered';
 };
+
+export type OrderModel = Model<IOrder, Record<string, unknown>>;

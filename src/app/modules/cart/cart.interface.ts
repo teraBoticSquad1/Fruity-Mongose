@@ -1,4 +1,4 @@
-import { Types } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { IProduct } from '../products/product.inteface';
 import { IUser } from '../users/user.interface';
 
@@ -12,3 +12,5 @@ export type ICart = {
   user: Types.ObjectId | IUser;
   products: Types.ObjectId[] | ISingleItem[];
 };
+
+export type CartModel = Model<ICart, Record<string, unknown>>;

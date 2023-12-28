@@ -37,7 +37,7 @@ export const productSchema = new Schema<IProduct>(
     category: [
       {
         type: Types.ObjectId,
-        ref: 'Category', // replace 'Category' with the actual model name for categories
+        ref: 'Category',
       },
     ],
     reviews: [

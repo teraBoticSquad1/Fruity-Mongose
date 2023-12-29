@@ -52,8 +52,21 @@ const updateSingle = async (
   return result;
 };
 
+const deleteUser = async (id: string) => {
+  const isExist = await User.findById(id);
+  if (!isExist) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found !');
+  }
+  const result = await User.findOneAndDelete({ _id: id });
+  if (!result) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'User not delete !');
+  }
+  return result;
+};
+
 export const UserService = {
   getAll,
   getSingle,
   updateSingle,
+  deleteUser,
 };

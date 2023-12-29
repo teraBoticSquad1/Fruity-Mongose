@@ -3,7 +3,7 @@ import httpStatus from 'http-status';
 import config from '../../../config';
 import catchAsync from '../../../shared/catchAsync';
 import sendResponse from '../../../shared/sendResponse';
-import { ILoginUserResponse } from './auth.interface';
+import { ILoginUserResponse, IRefreshTokenResponse } from './auth.interface';
 import { AuthServices } from './auth.service';
 
 const registerUser = catchAsync(async (req: Request, res: Response) => {
@@ -36,6 +36,7 @@ const userLogin = catchAsync(async (req: Request, res: Response) => {
     httpOnly: true,
   };
   res.cookie('refreshToken', refreshToken, cookieOption);
+
   sendResponse<ILoginUserResponse>(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -44,7 +45,29 @@ const userLogin = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const refreshToken = catchAsync(async (req: Request, res: Response) => {
+  const { refreshToken } = req.cookies;
+
+  const result = await AuthServices.refreshToken(refreshToken);
+
+  // set refresh token into
+  const cookieOptions = {
+    secure: config.env === 'production',
+    httpOnly: true,
+  };
+
+  res.cookie('refreshToken', refreshToken, cookieOptions);
+
+  sendResponse<IRefreshTokenResponse>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'User logged in successfully !',
+    data: result,
+  });
+});
+
 export const AuthController = {
   registerUser,
   userLogin,
+  refreshToken,
 };

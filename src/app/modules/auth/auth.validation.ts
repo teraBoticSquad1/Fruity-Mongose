@@ -15,6 +15,14 @@ const registerUserZodSchema = z.object({
   }),
 });
 
+const userLoginZodSchema = z.object({
+  body: z.object({
+    email: z.string({ required_error: 'Email is required ' }),
+    password: z.string({ required_error: 'Password is required ' }),
+  }),
+});
+
 export const AuthValidation = {
   registerUserZodSchema,
+  userLoginZodSchema,
 };

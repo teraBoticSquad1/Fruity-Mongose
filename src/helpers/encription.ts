@@ -9,6 +9,11 @@ export const isPasswordMatched = (
   givenPassword: string,
   savedPassword: string
 ) => {
+  console.log(givenPassword, savedPassword);
+
+  if (!givenPassword || !savedPassword) {
+    return false;
+  }
   const result = bcrypt.compare(givenPassword, savedPassword);
   return result;
 };

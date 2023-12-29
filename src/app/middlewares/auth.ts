@@ -21,9 +21,11 @@ const auth =
       verifiedUser = jwtHelpers.verifyToken(token, config.jwt.secret as Secret);
 
       req.user = verifiedUser;
+      const role = verifiedUser.role;
+      const lowerCaseRole = role.toLowerCase();
 
       // role diye guard korar jnno
-      if (requiredRoles.length && !requiredRoles.includes(verifiedUser.role)) {
+      if (requiredRoles.length && !requiredRoles.includes(lowerCaseRole)) {
         throw new ApiError(httpStatus.FORBIDDEN, 'Forbidden');
       }
       next();

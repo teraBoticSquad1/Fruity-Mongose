@@ -9,6 +9,7 @@ import { jwtHelpers } from '../../../helpers/jwtHelpers';
 import { IUser } from '../users/user.interface';
 import { User } from '../users/user.model';
 import {
+  IChangePassword,
   ILoginUser,
   ILoginUserResponse,
   IRefreshTokenResponse,
@@ -84,7 +85,6 @@ const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
   }
 
   const { id } = verifiedToken;
-  console.log(id);
 
   const isUserExist = await User.findById(id);
 
@@ -104,8 +104,37 @@ const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
   };
 };
 
+const changePassword = async (payload: IChangePassword, userId: string) => {
+  const { oldPassword, newPassword } = payload;
+
+  const isUserExist = await User.findById(userId).select('+password');
+
+  if (!isUserExist) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User does not exist');
+  }
+
+  const isMatched = await isPasswordMatched(oldPassword, isUserExist?.password);
+
+  if (!isMatched) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Password is not matched');
+  }
+  // password validity check
+  const passwordValidity = checkPasswordStrength(
+    isUserExist.email,
+    newPassword
+  );
+  if (!passwordValidity.validity) {
+    throw new ApiError(httpStatus.BAD_REQUEST, passwordValidity.msg);
+  }
+
+  isUserExist.password = newPassword;
+  isUserExist.save();
+  return isUserExist;
+};
+
 export const AuthServices = {
   registerUser,
   loginUser,
   refreshToken,
+  changePassword,
 };

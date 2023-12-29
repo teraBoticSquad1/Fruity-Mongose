@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
 import config from '../../../config';
@@ -66,8 +67,23 @@ const refreshToken = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const changePassword = catchAsync(async (req: any, res: Response) => {
+  // console.log(req);
+
+  const { id } = req.user as any;
+
+  await AuthServices.changePassword(req.body, id);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Password changed successfully !',
+  });
+});
+
 export const AuthController = {
   registerUser,
   userLogin,
   refreshToken,
+  changePassword,
 };

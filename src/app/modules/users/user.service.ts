@@ -27,7 +27,33 @@ const getSingle = async (
   return result;
 };
 
+const updateSingle = async (
+  payload: Partial<IUser>,
+  id: string,
+  userId: string,
+  userRole: string
+): Promise<IUser | null> => {
+  const isExist = await User.findById(id);
+  if (!isExist) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found !');
+  }
+
+  if (userRole.toLowerCase() === 'customer' && userId !== id) {
+    throw new ApiError(
+      httpStatus.FORBIDDEN,
+      'You are not able to update others profile'
+    );
+  }
+
+  const result = await User.findOneAndUpdate({ _id: id }, payload, {
+    new: true,
+  });
+
+  return result;
+};
+
 export const UserService = {
   getAll,
   getSingle,
+  updateSingle,
 };

@@ -24,11 +24,13 @@ export const userSchema = new Schema<IUser, UserModel>(
     },
     firstName: {
       type: String,
-      required: false,
+      // required: false,
+      default: null,
     },
     lastName: {
       type: String,
-      required: false,
+      default: null,
+      // required: false,
     },
     userName: {
       type: String,
@@ -37,7 +39,8 @@ export const userSchema = new Schema<IUser, UserModel>(
     },
     address: {
       type: String,
-      required: false,
+      default: null,
+      // required: false,
     },
     orders: [
       {

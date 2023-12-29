@@ -43,7 +43,7 @@ const loginUser = async (
 
   const result = await User.findOne({ email: email }).select('+password');
   if (!result) {
-    throw new ApiError(httpStatus.OK, 'User not found !');
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found !');
   }
 
   const isMatched = await isPasswordMatched(password, result?.password);

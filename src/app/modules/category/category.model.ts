@@ -5,7 +5,7 @@ export const categorySchema = new Schema<ICategory, CategoryModel>(
   {
     name: {
       type: String,
-      require: true,
+      required: true,
     },
   },
   {

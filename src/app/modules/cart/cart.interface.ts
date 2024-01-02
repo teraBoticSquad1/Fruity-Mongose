@@ -10,7 +10,12 @@ export type ISingleItem = {
 
 export type ICart = {
   user: Types.ObjectId | IUser;
-  products: Types.ObjectId[] | ISingleItem[];
+  products: ISingleItem[];
 };
 
 export type CartModel = Model<ICart, Record<string, unknown>>;
+
+export type ICartPayload = {
+  productId: string;
+  quantity: number;
+};

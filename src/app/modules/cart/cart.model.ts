@@ -1,13 +1,24 @@
 import { Schema, Types, model } from 'mongoose';
 import { CartModel, ICart } from './cart.interface';
 
-export const cartSchema = new Schema<ICart>(
+export const cartSchema = new Schema<ICart, CartModel>(
   {
     user: {
       type: Types.ObjectId,
-      require: true,
+      required: true,
     },
+    products: [
+      {
+        product: {
+          type: Types.ObjectId,
+          required: true,
+        },
+        price: { type: Number },
+        quantity: { type: Number, default: 1 },
+      },
+    ],
   },
+
   {
     timestamps: true,
     toJSON: {

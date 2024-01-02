@@ -34,7 +34,7 @@ export const userSchema = new Schema<IUser, UserModel>(
     },
     userName: {
       type: String,
-      require: true,
+      required: true,
       unique: true,
     },
     address: {

@@ -1,7 +1,7 @@
 import { Schema, Types, model } from 'mongoose';
 import { IProduct, ProductModel } from './product.inteface';
 
-export const productSchema = new Schema<IProduct>(
+export const productSchema = new Schema<IProduct, ProductModel>(
   {
     code: {
       type: String,

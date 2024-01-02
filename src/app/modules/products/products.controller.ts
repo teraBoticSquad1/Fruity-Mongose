@@ -4,6 +4,9 @@ import httpStatus from 'http-status';
 import catchAsync from '../../../shared/catchAsync';
 import sendResponse from '../../../shared/sendResponse';
 
+import { paginationFields } from '../../../constants/paginationFields';
+import pick from '../../../shared/pick';
+import { fruitFilterableFields } from './product.constant';
 import { ProductService } from './product.service';
 
 const createSingle = catchAsync(async (req: Request, res: Response) => {
@@ -19,7 +22,10 @@ const createSingle = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAll = catchAsync(async (req: Request, res: Response) => {
-  const result = await ProductService.getAll();
+  const filters = pick(req.query, fruitFilterableFields);
+  const paginationOptions = pick(req.query, paginationFields);
+
+  const result = await ProductService.getAll(filters, paginationOptions);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

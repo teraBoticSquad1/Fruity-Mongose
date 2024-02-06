@@ -4,7 +4,7 @@ import { IUser } from '../users/user.interface';
 
 export type ISingleItem = {
   product: Types.ObjectId | IProduct;
-  price: number;
+  // price: number;
   quantity: number;
 };
 

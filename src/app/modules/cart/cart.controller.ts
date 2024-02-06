@@ -16,6 +16,18 @@ const addToCart = catchAsync(async (req: any, res: Response) => {
   });
 });
 
+const removeFromCart = catchAsync(async (req: any, res: Response) => {
+  const { id } = req.user;
+  const result = await CartService.removeFromCart(id, req.body);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Remove from cart',
+    data: result,
+  });
+});
+
 export const CartController = {
   addToCart,
+  removeFromCart,
 };

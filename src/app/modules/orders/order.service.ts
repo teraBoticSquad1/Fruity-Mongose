@@ -1,8 +1,13 @@
 import httpStatus from 'http-status';
 import mongoose, { Types } from 'mongoose';
+import { ENUM_USER_ROLE } from '../../../enums/user';
 import ApiError from '../../../errors/ApiErrors';
 import { Cart } from '../cart/cart.model';
-import { IOrder, IOrderAddPayload } from './order.interface';
+import {
+  IOrder,
+  IOrderAddPayload,
+  IOrderUpdatePayload,
+} from './order.interface';
 import { Order } from './order.model';
 
 const addOrder = async (userID: string, payload: IOrderAddPayload) => {
@@ -55,14 +60,42 @@ const addOrder = async (userID: string, payload: IOrderAddPayload) => {
     await session.endSession();
     throw error;
   }
+};
 
-  // const result = await Order.create(orderInfo);
-  // if (!result) {
-  //   throw new ApiError(httpStatus.BAD_REQUEST, 'Order not create');
-  // }
-  return session;
+const updateOrder = async (
+  userRole: string,
+  userId: string,
+  orderId: string,
+  payload: IOrderUpdatePayload
+) => {
+  const isOrderExist = await Order.findById(orderId);
+
+  if (!isOrderExist) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Order not exist 📌');
+  }
+
+  if (
+    userRole === ENUM_USER_ROLE.ADMIN ||
+    userRole === ENUM_USER_ROLE.SUPER_ADMIN
+  ) {
+    const result = await Order.findByIdAndUpdate(orderId, payload);
+    return result;
+  } else {
+    if (payload?.status !== 'Cancelled') {
+      throw new ApiError(
+        httpStatus.BAD_REQUEST,
+        'You are not able to update status'
+      );
+    }
+    if (isOrderExist?.status === 'Cancelled') {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Order already canceled');
+    }
+    const result = await Order.findById(orderId, { status: payload.status });
+    return result;
+  }
 };
 
 export const OrderService = {
   addOrder,
+  updateOrder,
 };

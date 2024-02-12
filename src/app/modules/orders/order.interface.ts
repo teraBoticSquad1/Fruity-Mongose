@@ -17,6 +17,18 @@ export type IOrderAddPayload = {
   paymentMethod: 'Online Payment' | 'Cash on delivery';
 };
 
+export type IOrderUpdatePayload = {
+  shippingFee?: number;
+  shippingAddress?: string;
+  contact?: string;
+  paymentMethod?: 'Online Payment' | 'Cash on delivery';
+  status?:
+    | 'Not Processed'
+    | 'Processing'
+    | 'Shipped'
+    | 'Cancelled'
+    | 'Delivered';
+};
 export type IOrder = {
   products: IOrderedProduct[];
   subTotal: number;

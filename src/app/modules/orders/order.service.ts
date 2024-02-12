@@ -1,12 +1,16 @@
 import httpStatus from 'http-status';
-import mongoose, { Types } from 'mongoose';
+import mongoose, { SortOrder, Types } from 'mongoose';
 import { ENUM_USER_ROLE } from '../../../enums/user';
 import ApiError from '../../../errors/ApiErrors';
+import { paginationHelpers } from '../../../helpers/paginationHelpers';
+import IPaginationOptions from '../../../interfaces/paginations';
 import { Cart } from '../cart/cart.model';
+import { orderSearchableFields } from './order.constant';
 import {
   IOrder,
   IOrderAddPayload,
   IOrderUpdatePayload,
+  IOrdersFilters,
 } from './order.interface';
 import { Order } from './order.model';
 
@@ -90,12 +94,79 @@ const updateOrder = async (
     if (isOrderExist?.status === 'Cancelled') {
       throw new ApiError(httpStatus.BAD_REQUEST, 'Order already canceled');
     }
-    const result = await Order.findById(orderId, { status: payload.status });
+    const result = await Order.findByIdAndUpdate(orderId, {
+      status: payload.status,
+    });
     return result;
   }
+};
+
+const getSingleUserAllOrder = async (userId: string) => {
+  const result = await Order.find({ user: userId });
+  return result;
+};
+
+const getAllOrder = async (
+  filters: IOrdersFilters,
+  paginationOptions: IPaginationOptions
+) => {
+  const { searchTerm, ...filtersData } = filters;
+
+  const { page, limit, skip, sortBy, sortOrder } =
+    paginationHelpers.calculatePagination(paginationOptions);
+
+  const andConditions = [];
+
+  if (searchTerm) {
+    andConditions.push({
+      $or: orderSearchableFields.map(field => ({
+        [field]: {
+          $regex: searchTerm,
+          $options: 'i',
+        },
+      })),
+    });
+  }
+
+  if (Object.keys(filtersData).length) {
+    andConditions.push({
+      $and: Object.entries(filtersData).map(([field, value]) => {
+        // Handle other fields normally
+        return {
+          [field]: value,
+        };
+      }),
+    });
+  }
+
+  const sortConditions: { [key: string]: SortOrder } = {};
+  if (sortBy && sortOrder) {
+    sortConditions[sortBy] = sortOrder;
+  }
+
+  const whereConditions =
+    andConditions.length > 0 ? { $and: andConditions } : {};
+
+  const result = await Order.find(whereConditions)
+    .sort(sortConditions)
+    .skip(skip)
+    .limit(limit);
+
+  const total = await Order.countDocuments(whereConditions);
+
+  return {
+    meta: {
+      page,
+      limit,
+      total,
+    },
+    data: result,
+  };
 };
 
 export const OrderService = {
   addOrder,
   updateOrder,
+  getAllOrder,
+  getSingleUserAllOrder,
 };

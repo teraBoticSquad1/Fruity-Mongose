@@ -8,3 +8,7 @@ export const orderStatus = [
 ];
 
 export const paymentMethod = ['Online Payment', 'Cash on Delivery '];
+
+export const orderSearchableFields = ['contact'];
+
+export const orderFilterableFields = ['searchTerm', 'status', 'paymentMethod'];

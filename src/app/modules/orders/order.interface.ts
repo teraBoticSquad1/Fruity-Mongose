@@ -46,4 +46,10 @@ export type IOrder = {
     | 'Delivered';
 };
 
+export type IOrdersFilters = {
+  searchTerm?: string;
+  status?: string;
+  paymentMethod?: string;
+};
+
 export type OrderModel = Model<IOrder, Record<string, unknown>>;

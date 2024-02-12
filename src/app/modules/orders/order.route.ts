@@ -13,6 +13,16 @@ router.post(
   validateRequest(OrderZodValidation.addOrderZodValidation),
   OrderController.createOrder
 );
+router.get(
+  '/',
+  auth(
+    ENUM_USER_ROLE.CUSTOMER,
+    ENUM_USER_ROLE.ADMIN,
+    ENUM_USER_ROLE.SUPER_ADMIN
+  ),
+  OrderController.getAllOrder
+);
+
 router.patch(
   '/update/:orderId',
   auth(

@@ -22,6 +22,15 @@ router.get(
   ),
   OrderController.getAllOrder
 );
+router.get(
+  '/:orderId',
+  auth(
+    ENUM_USER_ROLE.CUSTOMER,
+    ENUM_USER_ROLE.ADMIN,
+    ENUM_USER_ROLE.SUPER_ADMIN
+  ),
+  OrderController.getSingleOrderDetails
+);
 
 router.patch(
   '/update/:orderId',

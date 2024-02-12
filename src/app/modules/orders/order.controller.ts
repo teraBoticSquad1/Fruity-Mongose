@@ -2,6 +2,7 @@
 import { Response } from 'express';
 import httpStatus from 'http-status';
 import { paginationFields } from '../../../constants/paginationFields';
+import { ENUM_USER_ROLE } from '../../../enums/user';
 import catchAsync from '../../../shared/catchAsync';
 import pick from '../../../shared/pick';
 import sendResponse from '../../../shared/sendResponse';
@@ -34,7 +35,29 @@ const updateOrder = catchAsync(async (req: any, res: Response) => {
 const getAllOrder = catchAsync(async (req: any, res: Response) => {
   const filters = pick(req.query, orderFilterableFields);
   const paginationOptions = pick(req.query, paginationFields);
-  const result = await OrderService.getAllOrder(filters, paginationOptions);
+  const { role, id } = req.user;
+
+  if (role === ENUM_USER_ROLE.ADMIN || role === ENUM_USER_ROLE.SUPER_ADMIN) {
+    const result = await OrderService.getAllOrder(filters, paginationOptions);
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Order retrieve successfully ✅ ',
+      data: result,
+    });
+  } else {
+    const result = await OrderService.getSingleUserAllOrder(id);
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Order retrieve successfully ✅',
+      data: result,
+    });
+  }
+});
+
+const getSingleOrderDetails = catchAsync(async (req: any, res: Response) => {
+  const result = await OrderService.getSingleOrderDetails(req.params.orderId);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -42,8 +65,10 @@ const getAllOrder = catchAsync(async (req: any, res: Response) => {
     data: result,
   });
 });
+
 export const OrderController = {
   createOrder,
   updateOrder,
   getAllOrder,
+  getSingleOrderDetails,
 };

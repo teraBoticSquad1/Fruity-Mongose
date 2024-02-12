@@ -164,9 +164,15 @@ const getAllOrder = async (
   };
 };
 
+const getSingleOrderDetails = async (orderId: string) => {
+  const result = await Order.findById(orderId);
+  return result;
+};
+
 export const OrderService = {
   addOrder,
   updateOrder,
   getAllOrder,
   getSingleUserAllOrder,
+  getSingleOrderDetails,
 };

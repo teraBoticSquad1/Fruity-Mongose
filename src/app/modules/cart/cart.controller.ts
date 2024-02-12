@@ -40,9 +40,19 @@ const deleteFromCart = catchAsync(async (req: any, res: Response) => {
     data: result,
   });
 });
-
+const getCartInfo = catchAsync(async (req: any, res: Response) => {
+  const { id, role } = req.user;
+  const result = await CartService.getCartInfo(role, id);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Retrieve cart info 🚀',
+    data: result,
+  });
+});
 export const CartController = {
   addToCart,
   removeFromCart,
   deleteFromCart,
+  getCartInfo,
 };

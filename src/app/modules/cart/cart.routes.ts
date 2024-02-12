@@ -7,6 +7,11 @@ import { CartValidation } from './cart.validation';
 
 const router = express.Router();
 
+router.get(
+  '/',
+  auth(ENUM_USER_ROLE.CUSTOMER, ENUM_USER_ROLE.ADMIN),
+  CartController.getCartInfo
+);
 router.post(
   '/add',
   auth(ENUM_USER_ROLE.CUSTOMER),

@@ -1,5 +1,6 @@
 import httpStatus from 'http-status';
 import mongoose from 'mongoose';
+import { ENUM_USER_ROLE } from '../../../enums/user';
 import ApiError from '../../../errors/ApiErrors';
 import { Product } from '../products/product.model';
 import { User } from './../users/user.model';
@@ -172,8 +173,19 @@ const deleteProductFromCart = async (userId: string, productId: string) => {
   return result;
 };
 
+const getCartInfo = async (userRole: string, userId: string) => {
+  if (userRole === ENUM_USER_ROLE.ADMIN) {
+    const result = await Cart.find();
+    return result;
+  } else {
+    const result = await Cart.findOne({ user: userId });
+    return result;
+  }
+};
+
 export const CartService = {
   productAddToCart,
   removeFromCart,
   deleteProductFromCart,
+  getCartInfo,
 };

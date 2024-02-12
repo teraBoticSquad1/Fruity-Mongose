@@ -50,9 +50,19 @@ const getCartInfo = catchAsync(async (req: any, res: Response) => {
     data: result,
   });
 });
+const getSingleCartInfo = catchAsync(async (req: any, res: Response) => {
+  const result = await CartService.getSingleCartInfo(req.params.cartId);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Retrieve cart info 🚀',
+    data: result,
+  });
+});
 export const CartController = {
   addToCart,
   removeFromCart,
   deleteFromCart,
   getCartInfo,
+  getSingleCartInfo,
 };

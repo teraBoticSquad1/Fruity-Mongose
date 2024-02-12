@@ -182,10 +182,18 @@ const getCartInfo = async (userRole: string, userId: string) => {
     return result;
   }
 };
+const getSingleCartInfo = async (cartId: string) => {
+  const result = await Cart.findById(cartId);
+  if (!result) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Cart Not found 😪');
+  }
+  return result;
+};
 
 export const CartService = {
   productAddToCart,
   removeFromCart,
   deleteProductFromCart,
   getCartInfo,
+  getSingleCartInfo,
 };

@@ -12,6 +12,11 @@ router.get(
   auth(ENUM_USER_ROLE.CUSTOMER, ENUM_USER_ROLE.ADMIN),
   CartController.getCartInfo
 );
+router.get(
+  '/:cartId',
+  auth(ENUM_USER_ROLE.ADMIN),
+  CartController.getSingleCartInfo
+);
 router.post(
   '/add',
   auth(ENUM_USER_ROLE.CUSTOMER),

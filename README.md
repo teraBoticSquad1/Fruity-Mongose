@@ -1,7 +1,9 @@
 # Fruity-Mongoose
 
-> [!Follow ]
-> Documentation for develop ui and follow discord for backend live link
+
+> [!Tip]
+> Follow Documentation for develop ui and follow discord for backend live link
+
 
 Documentation:
 

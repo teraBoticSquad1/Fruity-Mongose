@@ -19,5 +19,9 @@ router.post(
   validateRequest(CartValidation.removeFromCartZodValidation),
   CartController.removeFromCart
 );
-
+router.delete(
+  '/delete',
+  auth(ENUM_USER_ROLE.CUSTOMER),
+  CartController.deleteFromCart
+);
 export const CartRoutes = router;

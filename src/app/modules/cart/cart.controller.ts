@@ -22,7 +22,21 @@ const removeFromCart = catchAsync(async (req: any, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Remove from cart',
+    message: 'Remove one from cart',
+    data: result,
+  });
+});
+
+const deleteFromCart = catchAsync(async (req: any, res: Response) => {
+  const { id } = req.user;
+  const result = await CartService.deleteProductFromCart(
+    id,
+    req.body.productId
+  );
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Delete from cart',
     data: result,
   });
 });
@@ -30,4 +44,5 @@ const removeFromCart = catchAsync(async (req: any, res: Response) => {
 export const CartController = {
   addToCart,
   removeFromCart,
+  deleteFromCart,
 };

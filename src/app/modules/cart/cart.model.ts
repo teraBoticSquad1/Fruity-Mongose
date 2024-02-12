@@ -13,7 +13,7 @@ export const cartSchema = new Schema<ICart, CartModel>(
           type: Types.ObjectId,
           required: true,
         },
-        // price: { type: Number },
+        price: { type: Number },
         quantity: { type: Number, default: 1 },
       },
     ],

@@ -30,11 +30,12 @@ const productAddToCart = async (payload: ICartPayload, userId: string) => {
     if (existingProductIndex !== -1) {
       // Product already exists in the cart, increment quantity
       cartInfo.products[existingProductIndex].quantity += 1;
+      cartInfo.products[existingProductIndex].price = isValidProduct?.price;
     } else {
       // Product not in the cart, add a new entry
       cartInfo.products.push({
         product: new mongoose.Types.ObjectId(productId),
-
+        price: isValidProduct?.price,
         quantity: 1,
       });
     }
